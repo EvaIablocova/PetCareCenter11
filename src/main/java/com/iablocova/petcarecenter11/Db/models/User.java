@@ -1,10 +1,12 @@
-package com.iablocova.petcarecenter11.models;
+package com.iablocova.petcarecenter11.Db.models;
 
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class User {
@@ -13,7 +15,9 @@ public class User {
     private Long id;
 
     private String name;
-    private String email;
+    private Integer level;
+
+    private LocalDateTime created_date;
 
     public Long getId() {
         return id;
@@ -31,11 +35,19 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public Integer getLevel() {
+        return level;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public LocalDateTime getCreated_date() {
+        return created_date;
+    }
+
+    public void setCreated_date(LocalDateTime created_date) {
+        this.created_date = created_date;
     }
 }

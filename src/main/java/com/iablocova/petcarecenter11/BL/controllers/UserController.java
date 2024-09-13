@@ -1,7 +1,7 @@
-package com.iablocova.petcarecenter11.controllers;
+package com.iablocova.petcarecenter11.BL.controllers;
 
-import com.iablocova.petcarecenter11.models.User;
-import com.iablocova.petcarecenter11.services.UserService;
+import com.iablocova.petcarecenter11.Db.models.User;
+import com.iablocova.petcarecenter11.BL.services.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
