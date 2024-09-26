@@ -8,6 +8,8 @@ public class AboutController {
     @GetMapping("/about")
     public String getAbout(){return "about";}
 
+    //test GitLab
+
     @GetMapping("/blog")
     public String getBlog(){return "blog";}
 
