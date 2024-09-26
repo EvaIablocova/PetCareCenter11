@@ -1,0 +1,216 @@
+    CREATE TABLE petcaredb.role (
+         id INTEGER AUTO_INCREMENT,
+         name VARCHAR(50) NOT NULL,
+         PRIMARY KEY (id),
+         UNIQUE (name)
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+    INSERT INTO petcaredb.role (name)
+    VALUES
+        ('admin'),
+        ('specialist'),
+        ('client');
+
+    CREATE TABLE petcaredb.user (
+         id INTEGER AUTO_INCREMENT,
+         role_id INTEGER DEFAULT 3,
+         first_name VARCHAR(50),
+         last_name VARCHAR(50),
+         email VARCHAR(50),
+         password VARCHAR(50),
+         PRIMARY KEY (id),
+         FOREIGN KEY (role_id) REFERENCES petcaredb.role(id) ON DELETE SET NULL
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+    CREATE TABLE petcaredb.specialist (
+             id INTEGER,
+             user_id INTEGER,
+             PRIMARY KEY (id),
+             FOREIGN KEY (user_id) REFERENCES petcaredb.user(id) ON DELETE SET NULL
+        )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE petcaredb.client (
+     id INTEGER,
+     user_id INTEGER,
+     pet_name VARCHAR(50),
+     PRIMARY KEY (id),
+     FOREIGN KEY (user_id) REFERENCES petcaredb.user(id) ON DELETE SET NULL
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+CREATE TABLE petcaredb.service (
+         id INTEGER,
+         name VARCHAR(50),
+         PRIMARY KEY (id)
+    )
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_ai_ci;
+
+    CREATE TABLE petcaredb.specialist_service (
+         id INTEGER,
+         specialist_id INTEGER,
+         service_id INTEGER,
+         price INTEGER,
+         amount_of_time INTEGER,
+         PRIMARY KEY (id),
+         FOREIGN KEY (specialist_id) REFERENCES petcaredb.specialist(id) ON DELETE CASCADE,
+         FOREIGN KEY (service_id) REFERENCES petcaredb.service(id) ON DELETE CASCADE
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+
+    CREATE TABLE petcaredb.cart (
+         id INTEGER AUTO_INCREMENT,
+         user_id INTEGER,
+         service_id INTEGER,
+         specialist_id INTEGER,
+         quantity INT,
+         order_number VARCHAR(50) DEFAULT NULL,
+         PRIMARY KEY (id),
+         FOREIGN KEY (user_id) REFERENCES petcaredb.user(id) ON DELETE CASCADE,
+         FOREIGN KEY (service_id) REFERENCES petcaredb.service(id) ON DELETE CASCADE,
+         FOREIGN KEY (specialist_id) REFERENCES petcaredb.specialist(id) ON DELETE CASCADE
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+    CREATE TABLE petcaredb.order (
+         id INTEGER AUTO_INCREMENT,
+         complete BOOLEAN DEFAULT FALSE,
+         total_cost INTEGER,
+         PRIMARY KEY (id)
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+    CREATE TABLE petcaredb.schedule (
+         id INTEGER,
+         date DATE,
+         start_hour TINYINT,
+         start_minute TINYINT,
+         end_hour TINYINT,
+         end_minute TINYINT,
+         booked BOOL,
+         paid BOOL,
+
+         PRIMARY KEY (id),
+
+         CHECK (start_hour BETWEEN 0 AND 23),
+         CHECK (start_minute BETWEEN 0 AND 59),
+         CHECK (end_hour BETWEEN 0 AND 23),
+         CHECK (end_minute BETWEEN 0 AND 59)
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+    CREATE TABLE petcaredb.order_service (
+         order_id INTEGER,
+         service_id INTEGER,
+         user_id INTEGER,
+         specialist_id INTEGER,
+         quantity INT,
+         price INTEGER,
+         schedule_id INTEGER,
+         PRIMARY KEY (order_id, service_id),
+         FOREIGN KEY (order_id) REFERENCES petcaredb.order(id) ON DELETE CASCADE,
+         FOREIGN KEY (schedule_id) REFERENCES petcaredb.schedule(id) ON DELETE CASCADE,
+         FOREIGN KEY (service_id) REFERENCES petcaredb.service(id) ON DELETE CASCADE,
+         FOREIGN KEY (user_id) REFERENCES petcaredb.user(id) ON DELETE CASCADE,
+         FOREIGN KEY (specialist_id) REFERENCES petcaredb.specialist(id) ON DELETE CASCADE
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+
+    CREATE TABLE petcaredb.article (
+         id INTEGER,
+         title VARCHAR(50),
+         text VARCHAR(50),
+         image VARCHAR(50),
+         PRIMARY KEY (id)
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+    CREATE TABLE petcaredb.review (
+         id INTEGER,
+         full_name VARCHAR(50),
+         comment VARCHAR(50),
+         posted BOOL,
+         article_id INTEGER,
+         user_id INTEGER,
+         PRIMARY KEY (id),
+         FOREIGN KEY (article_id) REFERENCES petcaredb.article(id) ON DELETE CASCADE,
+         FOREIGN KEY (user_id) REFERENCES petcaredb.user(id) ON DELETE CASCADE
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+    CREATE TABLE petcaredb.message (
+         id INTEGER,
+         full_name VARCHAR(50),
+         email VARCHAR(50),
+         phone_number VARCHAR(50),
+         subject VARCHAR(50),
+         message VARCHAR(50),
+         answered BOOL,
+         user_id INTEGER,
+         PRIMARY KEY (id),
+         FOREIGN KEY (user_id) REFERENCES petcaredb.user(id) ON DELETE CASCADE
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+    CREATE TABLE petcaredb.way_of_payment (
+         id INTEGER AUTO_INCREMENT,
+         way_of_payment VARCHAR(50),
+         PRIMARY KEY (id),
+         UNIQUE (way_of_payment)
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
+
+    INSERT INTO petcaredb.way_of_payment (way_of_payment)
+    VALUES
+        ('stripe'),
+        ('paypal'),
+        ('cash');
+
+    CREATE TABLE petcaredb.payment (
+         id INTEGER,
+         way_of_payment_id INTEGER,
+         order_id INTEGER,
+         PRIMARY KEY (id),
+         FOREIGN KEY (way_of_payment_id) REFERENCES petcaredb.way_of_payment(id) ON DELETE CASCADE,
+         FOREIGN KEY (order_id) REFERENCES petcaredb.order(id) ON DELETE CASCADE
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
