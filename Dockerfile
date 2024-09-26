@@ -22,11 +22,15 @@ RUN wget https://dl.min.io/server/minio/release/linux-amd64/minio && \
 # Set up supervisor to manage multiple services (Spring Boot, Redis, Kafka, MinIO)
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+
 # Set the JAR file as an argument
 ARG JAR_FILE=target/*.jar
 
 # Copy the JAR file into the container
 COPY ${JAR_FILE} app.jar
+
+RUN mkdir -p /app/resources/static
+COPY ./src/main/resources/static /app/resources/static
 
 # Expose necessary ports
 EXPOSE 8080 6379 9092 9000 9001
